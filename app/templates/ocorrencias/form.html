@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Registrar ocorrência — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/ocorrencias">&larr; Voltar às ocorrências</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Registro de ocorrências</p>
+  <h1>Registrar ocorrência</h1>
+</div>
+
+{% if erros %}
+<ul class="aviso">
+  {% for erro in erros %}
+  <li>{{ erro }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<form method="post" action="/contratos/{{ contrato.id }}/ocorrencias" class="form--larga">
+  <label>Data
+    <input type="date" name="data" value="{{ valores.get('data', '') }}">
+  </label>
+  <label>Descrição
+    <textarea name="descricao">{{ valores.get('descricao', '') }}</textarea>
+  </label>
+  <fieldset>
+    <legend>Gravidade</legend>
+    {% for valor, rotulo in gravidades.items() %}
+    <label>
+      <input type="radio" name="gravidade" value="{{ valor }}" {% if valores.get('gravidade') == valor %}checked{% endif %}>
+      {{ rotulo }}
+    </label>
+    {% endfor %}
+  </fieldset>
+  <button type="submit">Salvar</button>
+</form>
+{% endblock %}

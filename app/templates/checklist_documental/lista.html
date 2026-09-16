@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Checklist documental — Competência {{ "%02d" % competencia.mes }}/{{ competencia.ano }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}">&larr; Voltar à competência</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Competência {{ "%02d" % competencia.mes }}/{{ competencia.ano }}</p>
+  <h1>Checklist documental</h1>
+</div>
+
+{% if erro %}
+<ul class="aviso">
+  <li>{{ erro }}</li>
+</ul>
+{% endif %}
+
+<div class="tabela-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Status</th>
+        <th>Data de referência</th>
+        <th>Validade</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for linha in linhas %}
+      <tr>
+        <td data-rotulo="Item">{{ linha.item.rotulo }}</td>
+        <td data-rotulo="Status">{{ linha.item.status }}</td>
+        <td data-rotulo="Data de referência">
+          {% if linha.item.chave in ("cndt", "crf_fgts") %}
+          <form method="post" action="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}/checklist/{{ linha.item.id }}/data-referencia">
+            <input type="date" name="data_referencia" value="{{ linha.item.data_referencia.isoformat() if linha.item.data_referencia else '' }}">
+            <button type="submit" class="botao--discreto">Salvar</button>
+          </form>
+          {% else %}
+          —
+          {% endif %}
+        </td>
+        <td data-rotulo="Validade">{{ linha.validade or "—" }}</td>
+        <td data-rotulo="Ações">
+          <form method="post" action="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}/checklist/{{ linha.item.id }}/alternar">
+            <button type="submit" class="botao">{{ "Marcar como ok" if linha.item.status == "pendente" else "Marcar como pendente" }}</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

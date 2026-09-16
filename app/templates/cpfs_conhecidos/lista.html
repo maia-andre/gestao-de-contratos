@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}CPFs conhecidos — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}">&larr; Voltar ao contrato {{ contrato.numero }}</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Fiscalização administrativa</p>
+  <h1>CPFs conhecidos — Contrato {{ contrato.numero }}</h1>
+  <p>CPFs fora da lista mestra marcados como conhecidos (ex.: funcionário de outro contrato da mesma contratada) deixam de aparecer como divergência a partir da competência de referência.</p>
+</div>
+
+{% if erro %}
+<ul class="aviso">
+  <li>{{ erro }}</li>
+</ul>
+{% endif %}
+
+{% if conhecidos %}
+<div class="tabela-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>CPF</th>
+        <th>Nome</th>
+        <th>Motivo</th>
+        <th>Competência de referência</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for conhecido in conhecidos %}
+      <tr>
+        <td data-rotulo="CPF" class="num">{{ conhecido.cpf }}</td>
+        <td data-rotulo="Nome">{{ conhecido.nome }}</td>
+        <td data-rotulo="Motivo">{{ conhecido.motivo }}</td>
+        <td data-rotulo="Competência de referência" class="num">{{ "%02d" % conhecido.competencia_referencia_mes }}/{{ conhecido.competencia_referencia_ano }}</td>
+        <td data-rotulo="Ações">
+          <form method="post" action="/contratos/{{ contrato.id }}/cpfs-conhecidos/{{ conhecido.id }}/remover">
+            <button type="submit" class="botao--discreto">Desmarcar</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="vazio">
+  <p>Nenhum CPF marcado como conhecido.</p>
+</div>
+{% endif %}
+{% endblock %}

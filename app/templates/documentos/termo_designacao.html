@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}Termo de Designação — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}">&larr; Voltar ao contrato {{ contrato.numero }}</a>
+
+<div class="acoes-pagina acoes-impressao-ocultar">
+  <a href="/contratos/{{ contrato.id }}/termo-designacao">Alterar autoridade signatária</a>
+</div>
+
+<article class="documento">
+  <header class="documento__cabecalho">
+    <p>{{ orgao }}</p>
+    <p>Fiscalização de Contratos — Decreto Municipal 19.721/2024</p>
+  </header>
+
+  <h1>Termo de Designação</h1>
+
+  <section class="documento__identificacao">
+    <p><strong>Contrato:</strong> {{ contrato.numero }}</p>
+    <p><strong>Objeto:</strong> {{ contrato.objeto }}</p>
+    <p><strong>Contratada:</strong> {{ contrato.contratada_razao_social }} — CNPJ {{ contrato.contratada_cnpj }}</p>
+    <p><strong>Vigência:</strong> {{ contrato.vigencia_inicio.strftime("%d/%m/%Y") }} a {{ contrato.vigencia_fim.strftime("%d/%m/%Y") }}</p>
+  </section>
+
+  <p class="documento__texto">
+    Ficam designados, nos termos do Decreto Municipal 19.721/2024, os servidores abaixo
+    relacionados para compor a equipe de fiscalização do contrato acima identificado:
+  </p>
+
+  <div class="tabela-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Matrícula/Cargo</th>
+          <th>Lotação</th>
+          <th>Papéis</th>
+          <th>Designação</th>
+          <th>Substituto</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for membro in membros %}
+        <tr>
+          <td data-rotulo="Nome">{{ membro.nome }}</td>
+          <td data-rotulo="Matrícula/Cargo">{{ membro.matricula_cargo }}</td>
+          <td data-rotulo="Lotação">{{ membro.lotacao }}</td>
+          <td data-rotulo="Papéis">{{ membro.papeis | map(attribute="papel") | join(", ") }}</td>
+          <td data-rotulo="Designação" class="num">{{ membro.data_designacao.strftime("%d/%m/%Y") }}</td>
+          <td data-rotulo="Substituto">{{ membro.substituto or "—" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <p class="documento__data">{{ municipio }}, {{ hoje.strftime("%d/%m/%Y") }}.</p>
+
+  <div class="documento__assinatura">
+    <p class="linha-assinatura"></p>
+    <p><strong>{{ autoridade_nome }}</strong></p>
+    <p>{{ autoridade_cargo }}</p>
+  </div>
+</article>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Notificação de Prorrogação — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/prorrogacao">&larr; Voltar à prorrogação</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Ciclo de prorrogação</p>
+  <h1>Notificação de Prorrogação</h1>
+</div>
+
+<ul class="aviso">
+  <li>
+    Não é possível gerar a Notificação de Prorrogação: este contrato ainda não tem equipe cadastrada.
+    Cadastre os membros da equipe primeiro.
+  </li>
+</ul>
+
+<a href="/contratos/{{ contrato.id }}/equipe/novo">Adicionar membro de equipe</a>
+{% endblock %}

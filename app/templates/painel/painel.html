@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Painel de prazos — Central de Apoio à Equipe de Fiscalização de Contratos{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos">&larr; Voltar à listagem de contratos</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Acompanhamento</p>
+  <h1>Painel de prazos e alertas</h1>
+  <p>Vigência de cada contrato e alertas antecipados: prorrogação, certidões, listagem semestral, GFD/DARF e Relatório Final. Cada alerta leva à tela onde se resolve.</p>
+</div>
+
+{% if linhas %}
+<div class="tabela-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Número</th>
+        <th>Objeto</th>
+        <th>Fim da vigência</th>
+        <th>Dias restantes</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for linha in linhas %}
+      <tr>
+        <td data-rotulo="Número"><a href="/contratos/{{ linha.contrato.id }}">{{ linha.contrato.numero }}</a></td>
+        <td data-rotulo="Objeto">{{ linha.contrato.objeto }}</td>
+        <td data-rotulo="Fim da vigência" class="num">{{ linha.contrato.vigencia_fim }}</td>
+        <td data-rotulo="Dias restantes" class="num">{{ linha.dias_restantes }}</td>
+        <td data-rotulo="Status">
+          <span class="status-prazo status-prazo--{{ linha.status_classe }}">{{ linha.status }}</span>
+        </td>
+      </tr>
+      {% if linha.alertas %}
+      <tr class="linha-alertas">
+        <td colspan="5" data-rotulo="Alertas">
+          <ul class="lista-alertas">
+            {% for alerta in linha.alertas %}
+            <li>
+              <a href="{{ alerta.url }}">{{ alerta.rotulo }}</a>
+              <span class="status-prazo status-prazo--{{ alerta.status_classe }}">{{ alerta.status }}</span>
+            </li>
+            {% endfor %}
+          </ul>
+        </td>
+      </tr>
+      {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="vazio">
+  <p>Nenhum contrato cadastrado.</p>
+</div>
+{% endif %}
+{% endblock %}

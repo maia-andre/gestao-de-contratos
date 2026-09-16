@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Configurações de prazos — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/prorrogacao">&larr; Voltar à prorrogação</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Configurações de prazos</p>
+  <h1>Prazos do contrato {{ contrato.numero }}</h1>
+</div>
+
+{% if erros %}
+<ul class="aviso">
+  {% for erro in erros %}
+  <li>{{ erro }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<form method="post" action="/contratos/{{ contrato.id }}/configuracoes-prazos" class="form--larga">
+  <label>Antecedência da notificação de prorrogação (dias antes do fim da vigência)
+    <input type="number" name="antecedencia_notificacao_dias" value="{{ valores.get('antecedencia_notificacao_dias', '') }}">
+  </label>
+  <label>Prazo de resposta da contratada (dias úteis)
+    <input type="number" name="prazo_resposta_dias_uteis" value="{{ valores.get('prazo_resposta_dias_uteis', '') }}">
+  </label>
+  <label>Antecedência do alerta de certidões (dias antes do vencimento)
+    <input type="number" name="antecedencia_certidoes_dias" value="{{ valores.get('antecedencia_certidoes_dias', '') }}">
+  </label>
+  <label>Antecedência do alerta da listagem semestral (dias antes do marco)
+    <input type="number" name="antecedencia_semestral_dias" value="{{ valores.get('antecedencia_semestral_dias', '') }}">
+  </label>
+  <label>Dia-limite da documentação GFD/DARF (dia do mês subsequente, 1 a 28)
+    <input type="number" name="dia_limite_gfd_darf" value="{{ valores.get('dia_limite_gfd_darf', '') }}">
+  </label>
+  <button type="submit">Salvar</button>
+</form>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Listagem semestral — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}">&larr; Voltar ao contrato</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Listagem semestral de terceirizados</p>
+  <h1>Marcos e entregas — Contrato {{ contrato.numero }}</h1>
+</div>
+
+{% if erros %}
+<ul class="aviso">
+  {% for erro in erros %}
+  <li>{{ erro }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% if marcos %}
+<div class="tabela-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Marco</th>
+        <th>Status</th>
+        <th>Entrega correspondente</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for linha in marcos %}
+      <tr>
+        <td data-rotulo="Marco" class="num">{{ linha.marco.strftime("%d/%m/%Y") }}</td>
+        <td data-rotulo="Status">{{ linha.status }}</td>
+        <td data-rotulo="Entrega correspondente">
+          {% if linha.entrega %}
+          <span class="num">{{ linha.entrega.data.strftime("%d/%m/%Y") }}</span>{% if linha.entrega.observacao %} — {{ linha.entrega.observacao }}{% endif %}
+          {% else %}—{% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="vazio">
+  <p>Nenhum marco semestral dentro da vigência (vigência menor que 6 meses).</p>
+</div>
+{% endif %}
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Registro</p>
+  <h2>Registrar entrega de listagem</h2>
+</div>
+<form method="post" action="/contratos/{{ contrato.id }}/listagem-semestral" class="form--larga">
+  <label>Data da entrega
+    <input type="date" name="data">
+  </label>
+  <label>Observação (opcional)
+    <input type="text" name="observacao">
+  </label>
+  <button type="submit">Registrar entrega</button>
+</form>
+
+{% if entregas %}
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Histórico</p>
+  <h2>Entregas registradas</h2>
+</div>
+<div class="tabela-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Observação</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entrega in entregas %}
+      <tr>
+        <td data-rotulo="Data" class="num">{{ entrega.data.strftime("%d/%m/%Y") }}</td>
+        <td data-rotulo="Observação">{{ entrega.observacao or "—" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+{% endblock %}

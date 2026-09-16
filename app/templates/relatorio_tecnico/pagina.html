@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Relatório técnico — Competência {{ "%02d" % competencia.mes }}/{{ competencia.ano }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}">&larr; Voltar à competência</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Relatório Mensal de Prestação de Serviços — Fiscal Técnico</p>
+  <h1>Contrato {{ contrato.numero }} — Competência {{ "%02d" % competencia.mes }}/{{ competencia.ano }}</h1>
+  <p>{{ contrato.contratada_razao_social }} ({{ contrato.contratada_cnpj }})</p>
+</div>
+
+{% if erros %}
+<ul class="aviso">
+  {% for erro in erros %}
+  <li>{{ erro }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<form method="post" action="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}/relatorio-tecnico" class="acoes-impressao-ocultar">
+  <label for="avaliacao">Avaliação (cronograma, qualidade, quantidade)</label>
+  <textarea id="avaliacao" name="avaliacao" rows="6">{{ valores.avaliacao }}</textarea>
+
+  <label for="conclusao">Conclusão</label>
+  <p>Conclusão sugerida automaticamente: <strong>{{ conclusoes[sugestao] }}</strong></p>
+  <select id="conclusao" name="conclusao">
+    {% for chave, rotulo in conclusoes.items() %}
+    <option value="{{ chave }}" {{ "selected" if chave == valores.conclusao else "" }}>{{ rotulo }}</option>
+    {% endfor %}
+  </select>
+
+  <label for="fiscal_responsavel_id">Fiscal responsável pelo ateste</label>
+  <select id="fiscal_responsavel_id" name="fiscal_responsavel_id">
+    <option value="">— Selecione —</option>
+    {% for fiscal in fiscais %}
+    <option value="{{ fiscal.id }}" {{ "selected" if valores.fiscal_responsavel_id and fiscal.id == valores.fiscal_responsavel_id|int else "" }}>{{ fiscal.nome }}</option>
+    {% endfor %}
+  </select>
+
+  <label for="data_ateste">Data do ateste</label>
+  <input type="date" id="data_ateste" name="data_ateste" value="{{ valores.data_ateste }}">
+
+  <button type="submit" class="botao">Salvar</button>
+</form>
+
+{% if salvo %}
+<div class="conclusao-impressao">
+  <h2>Avaliação</h2>
+  <p>{{ salvo.avaliacao }}</p>
+  <h2>Conclusão</h2>
+  <p>{{ conclusoes[salvo.conclusao] }}</p>
+  <h2>Ateste</h2>
+  <p>{{ salvo.fiscal_responsavel.nome }} — {{ salvo.data_ateste.isoformat() }}</p>
+</div>
+{% endif %}
+{% endblock %}

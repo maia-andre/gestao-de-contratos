@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Importar dados — Central de Apoio à Equipe de Fiscalização de Contratos{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos">&larr; Voltar à listagem</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Backup</p>
+  <h1>Importar dados</h1>
+  <p>Restaure contratos e equipes a partir de um arquivo <code>.json</code> exportado por este sistema, em outra instância ou máquina.</p>
+</div>
+
+{% if erro %}
+<ul class="aviso">
+  <li>{{ erro }}</li>
+</ul>
+{% endif %}
+
+<form method="post" action="/importar" enctype="multipart/form-data">
+  <label>Arquivo .json exportado por este sistema
+    <input type="file" name="arquivo" accept="application/json,.json">
+  </label>
+  <button type="submit">Importar</button>
+</form>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Ocorrências — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}">&larr; Voltar ao contrato {{ contrato.numero }}</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Registro de ocorrências</p>
+  <h1>Ocorrências — Contrato {{ contrato.numero }}</h1>
+  <div class="acoes-pagina">
+    <a href="/contratos/{{ contrato.id }}/ocorrencias/nova">Registrar ocorrência</a>
+  </div>
+</div>
+
+{% if ocorrencias %}
+<div class="tabela-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Descrição</th>
+        <th>Gravidade</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for ocorrencia in ocorrencias %}
+      <tr>
+        <td data-rotulo="Data" class="num">{{ ocorrencia.data }}</td>
+        <td data-rotulo="Descrição">{{ ocorrencia.descricao }}</td>
+        <td data-rotulo="Gravidade">{{ rotulos_gravidade.get(ocorrencia.gravidade, ocorrencia.gravidade) }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="vazio">
+  <p>Nenhuma ocorrência registrada.</p>
+</div>
+{% endif %}
+{% endblock %}

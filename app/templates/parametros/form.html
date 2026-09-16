@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Parâmetros de batimento — Central de Apoio à Equipe de Fiscalização de Contratos{% endblock %}
+
+{% block content %}
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Fiscalização administrativa</p>
+  <h1>Parâmetros de batimento FGTS/INSS</h1>
+  <p>Valores pré-carregados conforme a tabela vigente em 2026 — editáveis a qualquer momento; a mudança vale para o recálculo de todas as competências.</p>
+</div>
+
+{% if erros %}
+<ul class="aviso">
+  {% for erro in erros %}
+  <li>{{ erro }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<form method="post" action="/parametros" class="form--larga">
+  <fieldset>
+    <legend>Tabela progressiva do INSS</legend>
+    {% for limite, aliquota in parametros.faixas_inss %}
+    <label>Limite superior da faixa {{ loop.index }}
+      <input type="text" name="limite_{{ loop.index }}" value="{{ limite }}">
+    </label>
+    <label>Alíquota da faixa {{ loop.index }}
+      <input type="text" name="aliquota_{{ loop.index }}" value="{{ aliquota }}">
+    </label>
+    {% endfor %}
+  </fieldset>
+  <label>Percentual de FGTS
+    <input type="text" name="percentual_fgts" value="{{ parametros.percentual_fgts }}">
+  </label>
+  <button type="submit">Salvar parâmetros</button>
+</form>
+{% endblock %}

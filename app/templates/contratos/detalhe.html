@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Contrato {{ contrato.numero }} — Central de Apoio à Equipe de Fiscalização de Contratos{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos">&larr; Voltar à listagem</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Contrato</p>
+  <h1>Contrato {{ contrato.numero }}</h1>
+  <div class="acoes-pagina">
+    <a href="/contratos/{{ contrato.id }}/editar">Editar contrato</a>
+    <span class="separador">·</span>
+    <a href="/contratos/{{ contrato.id }}/exportar">Exportar (.json)</a>
+    <span class="separador">·</span>
+    <a href="/contratos/{{ contrato.id }}/competencias">Competências</a>
+    <span class="separador">·</span>
+    <a href="/contratos/{{ contrato.id }}/terceirizados">Lista mestra</a>
+    <span class="separador">·</span>
+    <a href="/contratos/{{ contrato.id }}/reunioes">Reuniões</a>
+    <span class="separador">·</span>
+    <a href="/contratos/{{ contrato.id }}/pendencias-pre-os">Pendências pré-OS</a>
+    <span class="separador">·</span>
+    <a href="/contratos/{{ contrato.id }}/ocorrencias">Ocorrências</a>
+    <span class="separador">·</span>
+    <a href="/contratos/{{ contrato.id }}/termo-designacao">Termo de Designação</a>
+    <span class="separador">·</span>
+    <a href="/contratos/{{ contrato.id }}/prorrogacao">Prorrogação</a>
+    <span class="separador">·</span>
+    <a href="/contratos/{{ contrato.id }}/configuracoes-prazos">Configurações de prazos</a>
+    <span class="separador">·</span>
+    <a href="/contratos/{{ contrato.id }}/relatorio-final">Relatório Final</a>
+    <span class="separador">·</span>
+    <a href="/contratos/{{ contrato.id }}/listagem-semestral">Listagem semestral</a>
+  </div>
+</div>
+
+<dl class="ficha">
+  <div>
+    <dt>Objeto</dt>
+    <dd>{{ contrato.objeto }}</dd>
+  </div>
+  <div>
+    <dt>Contratada</dt>
+    <dd>{{ contrato.contratada_razao_social }} — {{ contrato.contratada_cnpj }}</dd>
+  </div>
+  <div>
+    <dt>Vigência</dt>
+    <dd class="num">{{ contrato.vigencia_inicio }} a {{ contrato.vigencia_fim }}</dd>
+  </div>
+  <div>
+    <dt>Mão de obra exclusiva</dt>
+    <dd>{{ "Sim" if contrato.mao_de_obra_exclusiva else "Não" }}</dd>
+  </div>
+  <div>
+    <dt>Valor global</dt>
+    <dd class="num">{{ contrato.valor_global }}</dd>
+  </div>
+  <div>
+    <dt>Modalidade</dt>
+    <dd>{{ contrato.modalidade }}</dd>
+  </div>
+  <div>
+    <dt>Ciclo de prorrogação</dt>
+    <dd><a href="/contratos/{{ contrato.id }}/prorrogacao">{{ ciclo.rotulo_estado }}</a></dd>
+  </div>
+</dl>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Equipe de fiscalização</p>
+  <h2>Equipe</h2>
+  <div class="acoes-pagina">
+    <a href="/contratos/{{ contrato.id }}/equipe/novo">Adicionar membro de equipe</a>
+  </div>
+</div>
+
+{% if contrato.membros %}
+<div class="tabela-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Matrícula/cargo</th>
+        <th>Lotação</th>
+        <th>Papéis</th>
+        <th>Data de designação</th>
+        <th>Substituto eventual</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for membro in contrato.membros %}
+      <tr>
+        <td data-rotulo="Nome">{{ membro.nome }}</td>
+        <td data-rotulo="Matrícula/cargo">{{ membro.matricula_cargo }}</td>
+        <td data-rotulo="Lotação">{{ membro.lotacao }}</td>
+        <td data-rotulo="Papéis">{{ membro.papeis | map(attribute="papel") | join(", ") }}</td>
+        <td data-rotulo="Data de designação" class="num">{{ membro.data_designacao }}</td>
+        <td data-rotulo="Substituto eventual">{{ membro.substituto or "—" }}</td>
+        <td data-rotulo="Ações">
+          <a href="/contratos/{{ contrato.id }}/equipe/{{ membro.id }}/editar">Editar</a>
+          ·
+          <form method="post" action="/contratos/{{ contrato.id }}/equipe/{{ membro.id }}/remover">
+            <button type="submit" class="botao--discreto">Remover</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="vazio">
+  <p>Nenhum membro de equipe cadastrado.</p>
+</div>
+{% endif %}
+{% endblock %}

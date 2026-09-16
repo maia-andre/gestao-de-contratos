@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}{{ titulo | default("Cadastrar contrato") }} — Central de Apoio à Equipe de Fiscalização de Contratos{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos">&larr; Voltar à listagem</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Contrato</p>
+  <h1>{{ titulo | default("Cadastrar contrato") }}</h1>
+</div>
+
+{% if erros %}
+<ul class="aviso">
+  {% for erro in erros %}
+  <li>{{ erro }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<form method="post" action="{{ action | default("/contratos") }}">
+  <label>Número
+    <input type="text" name="numero" value="{{ valores.get('numero', '') }}">
+  </label>
+  <label>Objeto
+    <textarea name="objeto">{{ valores.get('objeto', '') }}</textarea>
+  </label>
+  <label>Razão social da contratada
+    <input type="text" name="contratada_razao_social" value="{{ valores.get('contratada_razao_social', '') }}">
+  </label>
+  <label>CNPJ da contratada
+    <input type="text" name="contratada_cnpj" value="{{ valores.get('contratada_cnpj', '') }}">
+  </label>
+  <label>Início da vigência
+    <input type="date" name="vigencia_inicio" value="{{ valores.get('vigencia_inicio', '') }}">
+  </label>
+  <label>Fim da vigência
+    <input type="date" name="vigencia_fim" value="{{ valores.get('vigencia_fim', '') }}">
+  </label>
+  <fieldset>
+    <legend>Mão de obra exclusiva</legend>
+    <label>
+      <input type="radio" name="mao_de_obra_exclusiva" value="sim" {% if valores.get('mao_de_obra_exclusiva') == 'sim' %}checked{% endif %}>
+      Sim
+    </label>
+    <label>
+      <input type="radio" name="mao_de_obra_exclusiva" value="nao" {% if valores.get('mao_de_obra_exclusiva') == 'nao' %}checked{% endif %}>
+      Não
+    </label>
+  </fieldset>
+  <label>Valor global
+    <input type="text" name="valor_global" value="{{ valores.get('valor_global', '') }}">
+  </label>
+  <label>Modalidade de contratação
+    <input type="text" name="modalidade" value="{{ valores.get('modalidade', '') }}">
+  </label>
+  <button type="submit">Salvar</button>
+</form>
+{% endblock %}

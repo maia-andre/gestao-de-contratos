@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Relatório Final — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}">&larr; Voltar ao contrato {{ contrato.numero }}</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Contrato {{ contrato.numero }}</p>
+  <h1>Relatório Final de Consecução de Objetivos</h1>
+</div>
+
+<ul class="aviso">
+  <li>Não é possível gerar o Relatório Final: {{ motivo }}.</li>
+</ul>
+
+<a href="{{ acao_url }}">{{ acao_rotulo }}</a>
+{% endblock %}

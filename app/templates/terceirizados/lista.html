@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Lista mestra — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}">&larr; Voltar ao contrato {{ contrato.numero }}</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Lista mestra de terceirizados</p>
+  <h1>Terceirizados — Contrato {{ contrato.numero }}</h1>
+  <div class="acoes-pagina">
+    <a href="/contratos/{{ contrato.id }}/terceirizados/novo">Cadastrar manualmente</a>
+    <span class="separador">·</span>
+    <a href="/contratos/{{ contrato.id }}/terceirizados/importar">Importar CSV</a>
+  </div>
+</div>
+
+{% if terceirizados %}
+<div class="tabela-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>CPF</th>
+        <th>Nome</th>
+        <th>Cargo</th>
+        <th>Salário base</th>
+        <th>Admissão</th>
+        <th>Desligamento</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for terceirizado in terceirizados %}
+      <tr>
+        <td data-rotulo="CPF" class="num">{{ terceirizado.cpf }}</td>
+        <td data-rotulo="Nome">{{ terceirizado.nome }}</td>
+        <td data-rotulo="Cargo">{{ terceirizado.cargo }}</td>
+        <td data-rotulo="Salário base" class="num">{{ terceirizado.salario_base }}</td>
+        <td data-rotulo="Admissão" class="num">{{ terceirizado.data_admissao }}</td>
+        <td data-rotulo="Desligamento" class="num">{{ terceirizado.data_desligamento or "—" }}</td>
+        <td data-rotulo="Ações">
+          <a href="/contratos/{{ contrato.id }}/terceirizados/{{ terceirizado.id }}/editar">Editar</a>
+          ·
+          <form method="post" action="/contratos/{{ contrato.id }}/terceirizados/{{ terceirizado.id }}/remover">
+            <button type="submit" class="botao--discreto">Remover</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="vazio">
+  <p>Nenhum terceirizado cadastrado.</p>
+</div>
+{% endif %}
+{% endblock %}

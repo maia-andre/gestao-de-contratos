@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Termo de Designação — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}">&larr; Voltar ao contrato {{ contrato.numero }}</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Contrato {{ contrato.numero }}</p>
+  <h1>Termo de Designação</h1>
+</div>
+
+<ul class="aviso">
+  <li>
+    Não é possível gerar o Termo de Designação: este contrato ainda não tem equipe cadastrada.
+    Cadastre os membros da equipe primeiro.
+  </li>
+</ul>
+
+<a href="/contratos/{{ contrato.id }}/equipe/novo">Adicionar membro de equipe</a>
+{% endblock %}

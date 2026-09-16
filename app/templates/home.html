@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<p class="eyebrow">Servidor local ativo</p>
+<h1>Central de Apoio à Equipe de Fiscalização de Contratos</h1>
+<p>Cadastre contratos, monte a equipe de fiscalização de cada um conforme o Decreto 19.721/2024 e acompanhe os prazos de vigência — tudo nesta instância local, sem rede externa e sem login.</p>
+
+<div class="acoes-pagina">
+  <a href="/contratos">Ver contratos cadastrados</a>
+  <span class="separador">·</span>
+  <a href="/painel">Painel de prazos</a>
+  <span class="separador">·</span>
+  <a href="/exportar">Exportar todos os contratos (.json)</a>
+  <span class="separador">·</span>
+  <a href="/importar">Importar dados (.json)</a>
+</div>
+{% endblock %}

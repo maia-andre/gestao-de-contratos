@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Relatório administrativo — Competência {{ "%02d" % competencia.mes }}/{{ competencia.ano }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}">&larr; Voltar à competência</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Competência {{ "%02d" % competencia.mes }}/{{ competencia.ano }}</p>
+  <h1>Relatório administrativo</h1>
+</div>
+
+<ul class="aviso">
+  <li>
+    Nenhuma folha mensal importada para esta competência ainda. Importe a folha antes de gerar o relatório
+    administrativo.
+  </li>
+</ul>
+
+<a href="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}/folha/importar">Importar folha mensal</a>
+{% endblock %}

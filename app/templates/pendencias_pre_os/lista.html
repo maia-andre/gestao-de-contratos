@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Pendências pré-OS — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}">&larr; Voltar ao contrato {{ contrato.numero }}</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Início da execução</p>
+  <h1>Pendências pré-OS — Contrato {{ contrato.numero }}</h1>
+</div>
+
+<div class="tabela-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in itens %}
+      <tr>
+        <td data-rotulo="Item">{{ item.item }}</td>
+        <td data-rotulo="Status">{{ item.status }}</td>
+        <td data-rotulo="Ações">
+          <form method="post" action="/contratos/{{ contrato.id }}/pendencias-pre-os/{{ item.id }}/alternar">
+            <button type="submit" class="botao">{{ "Marcar como ok" if item.status == "pendente" else "Marcar como pendente" }}</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

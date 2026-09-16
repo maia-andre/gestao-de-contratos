@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Competência {{ "%02d" % competencia.mes }}/{{ competencia.ano }} — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/competencias">&larr; Voltar às competências</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Contrato {{ contrato.numero }}</p>
+  <h1>Competência {{ "%02d" % competencia.mes }}/{{ competencia.ano }}</h1>
+  <div class="acoes-pagina">
+    <a href="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}/recebimento-provisorio">Recebimento provisório</a>
+    <span class="separador">·</span>
+    <a href="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}/relatorio-tecnico">Relatório técnico</a>
+    <span class="separador">·</span>
+    <a href="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}/folha">Folha mensal</a>
+    <span class="separador">·</span>
+    <a href="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}/checklist">Checklist documental</a>
+    <span class="separador">·</span>
+    <a href="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}/relatorio-administrativo">Relatório administrativo</a>
+  </div>
+</div>
+{% endblock %}

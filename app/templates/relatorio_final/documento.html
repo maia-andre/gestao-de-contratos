@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}Relatório Final — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/relatorio-final">&larr; Voltar ao parecer</a>
+
+<div class="acoes-pagina acoes-impressao-ocultar">
+  <a href="/contratos/{{ contrato.id }}/relatorio-final/documento">Trocar emissor</a>
+</div>
+
+<article class="documento">
+  <header class="documento__cabecalho">
+    <p>{{ orgao }}</p>
+    <p>Fiscalização de Contratos — Decreto Municipal 19.721/2024</p>
+  </header>
+
+  <h1>Relatório Final de Consecução de Objetivos</h1>
+  <p class="documento__texto">Lei 14.133/2021, art. 174, §3º, VI, "d".</p>
+
+  <section class="documento__identificacao">
+    <p><strong>Contrato:</strong> {{ contrato.numero }}</p>
+    <p><strong>Objeto:</strong> {{ contrato.objeto }}</p>
+    <p><strong>Contratada:</strong> {{ contrato.contratada_razao_social }} — CNPJ {{ contrato.contratada_cnpj }}</p>
+    <p><strong>Valor global:</strong> {{ contrato.valor_global }}</p>
+    <p><strong>Modalidade:</strong> {{ contrato.modalidade }}</p>
+    <p><strong>Vigência original:</strong> {{ contrato.vigencia_inicio.strftime("%d/%m/%Y") }} a {{ vigencia_fim_original.strftime("%d/%m/%Y") }}</p>
+    {% if historico %}
+    <p><strong>Prorrogações:</strong></p>
+    <ul>
+      {% for aditivo in historico %}
+      <li>Registrada em {{ aditivo.data_registro_aditivo.strftime("%d/%m/%Y") }}: de {{ aditivo.vigencia_fim_anterior.strftime("%d/%m/%Y") }} para {{ aditivo.nova_vigencia_fim.strftime("%d/%m/%Y") }}</li>
+      {% endfor %}
+    </ul>
+    <p><strong>Vigência final:</strong> {{ contrato.vigencia_inicio.strftime("%d/%m/%Y") }} a {{ contrato.vigencia_fim.strftime("%d/%m/%Y") }}</p>
+    {% endif %}
+  </section>
+
+  <section class="documento__secao">
+    <h2>Equipe de fiscalização</h2>
+    <ul>
+      {% for membro in membros %}
+      <li>{{ membro.nome }} — {{ membro.matricula_cargo }} ({{ membro.papeis | map(attribute="papel") | join(", ") }})</li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section class="documento__secao">
+    <h2>Resumo da execução fiscalizada</h2>
+    <p><strong>Reuniões registradas:</strong> <span class="num">{{ resumo.total_reunioes }}</span></p>
+    {% if resumo.competencias %}
+    <p><strong>Competências fiscalizadas:</strong></p>
+    <ul>
+      {% for comp in resumo.competencias %}
+      <li>{{ comp.rotulo }} — técnica: {{ comp.conclusao_tecnica or "—" }}; administrativa: {{ comp.conclusao_administrativa or "—" }}</li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p><strong>Competências fiscalizadas:</strong> nenhuma registrada.</p>
+    {% endif %}
+    <p><strong>Ocorrências:</strong> <span class="num">{{ resumo.total_ocorrencias }}</span>
+      (leve: <span class="num">{{ resumo.ocorrencias_por_gravidade["leve"] }}</span>,
+      média: <span class="num">{{ resumo.ocorrencias_por_gravidade["média"] }}</span>,
+      grave: <span class="num">{{ resumo.ocorrencias_por_gravidade["grave"] }}</span>)</p>
+    {% if resumo.recebimentos %}
+    <p><strong>Recebimentos provisórios:</strong></p>
+    <ul>
+      {% for recebimento in resumo.recebimentos %}
+      <li>{{ recebimento.competencia }} — {{ recebimento.decisao }}, em {{ recebimento.data.strftime("%d/%m/%Y") }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </section>
+
+  <section class="documento__secao">
+    <h2>Parecer sobre a consecução dos objetivos</h2>
+    <p><strong>{{ conceito_rotulo }}.</strong></p>
+    <p class="preservar-quebras">{{ relatorio.justificativa }}</p>
+  </section>
+
+  <section class="documento__secao">
+    <h2>Condutas para aprimoramento / lições aprendidas</h2>
+    {% if relatorio.licoes %}
+    <p class="preservar-quebras">{{ relatorio.licoes }}</p>
+    {% else %}
+    <p>Nada a registrar.</p>
+    {% endif %}
+  </section>
+
+  <p class="documento__data">{{ municipio }}, {{ hoje.strftime("%d/%m/%Y") }}.</p>
+
+  <div class="documento__assinatura">
+    <p class="linha-assinatura"></p>
+    <p><strong>{{ emissor.nome }}</strong></p>
+    <p>{{ emissor.matricula_cargo }}</p>
+  </div>
+</article>
+{% endblock %}

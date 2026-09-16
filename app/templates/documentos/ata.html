@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Ata de reunião — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/reunioes">&larr; Voltar às reuniões</a>
+
+<article class="documento">
+  <header class="documento__cabecalho">
+    <p>{{ orgao }}</p>
+    <p>Fiscalização de Contratos — Decreto Municipal 19.721/2024</p>
+  </header>
+
+  <h1>Ata de Reunião</h1>
+
+  <section class="documento__identificacao">
+    <p><strong>Contrato:</strong> {{ contrato.numero }}</p>
+    <p><strong>Objeto:</strong> {{ contrato.objeto }}</p>
+    <p><strong>Contratada:</strong> {{ contrato.contratada_razao_social }} — CNPJ {{ contrato.contratada_cnpj }}</p>
+    <p><strong>Data da reunião:</strong> {{ reuniao.data.strftime("%d/%m/%Y") }}{% if reuniao.hora %}, às {{ reuniao.hora }}{% endif %}</p>
+    {% if reuniao.local %}
+    <p><strong>Local:</strong> {{ reuniao.local }}</p>
+    {% endif %}
+  </section>
+
+  <section class="documento__secao">
+    <h2>Resumo e deliberações</h2>
+    <p class="preservar-quebras">{{ reuniao.resumo }}</p>
+  </section>
+
+  <section class="documento__secao">
+    <h2>Participantes</h2>
+    {% for participante in participantes %}
+    <div class="documento__assinatura">
+      <p class="linha-assinatura"></p>
+      <p><strong>{{ participante }}</strong></p>
+    </div>
+    {% endfor %}
+  </section>
+</article>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Termo de Designação — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}">&larr; Voltar ao contrato {{ contrato.numero }}</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Contrato {{ contrato.numero }}</p>
+  <h1>Termo de Designação</h1>
+</div>
+
+{% if erros %}
+<ul class="aviso">
+  {% for erro in erros %}
+  <li>{{ erro }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<form method="get" action="/contratos/{{ contrato.id }}/termo-designacao" class="form--larga">
+  <label>Nome da autoridade signatária
+    <input type="text" name="autoridade_nome" value="{{ valores.get('autoridade_nome', '') }}">
+  </label>
+  <label>Cargo da autoridade signatária
+    <input type="text" name="autoridade_cargo" value="{{ valores.get('autoridade_cargo', '') }}">
+  </label>
+  <button type="submit">Gerar termo</button>
+</form>
+{% endblock %}

@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Folha mensal — Competência {{ "%02d" % competencia.mes }}/{{ competencia.ano }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}">&larr; Voltar à competência</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Competência {{ "%02d" % competencia.mes }}/{{ competencia.ano }}</p>
+  <h1>Folha mensal</h1>
+  <div class="acoes-pagina">
+    <a href="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}/folha/importar">Importar folha (.csv)</a>
+    <span class="separador">·</span>
+    <a href="/contratos/{{ contrato.id }}/cpfs-conhecidos">CPFs conhecidos</a>
+  </div>
+</div>
+
+{% if linhas %}
+<div class="tabela-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>CPF</th>
+        <th>Nome</th>
+        <th>Base INSS</th>
+        <th>INSS descontado</th>
+        <th>INSS esperado</th>
+        <th>Base FGTS</th>
+        <th>FGTS depositado</th>
+        <th>FGTS esperado</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for linha in linhas %}
+      <tr>
+        <td data-rotulo="CPF" class="num">{{ linha.item.cpf }}</td>
+        <td data-rotulo="Nome">{{ linha.item.nome }}</td>
+        <td data-rotulo="Base INSS" class="num">{{ linha.item.base_inss }}</td>
+        <td data-rotulo="INSS descontado" class="num">{{ linha.item.inss_descontado }}</td>
+        <td data-rotulo="INSS esperado" class="num">{{ linha.inss_esperado }}</td>
+        <td data-rotulo="Base FGTS" class="num">{{ linha.item.base_fgts }}</td>
+        <td data-rotulo="FGTS depositado" class="num">{{ linha.item.fgts_depositado }}</td>
+        <td data-rotulo="FGTS esperado" class="num">{{ linha.fgts_esperado }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="vazio">
+  <p>Nenhuma folha importada para esta competência.</p>
+</div>
+{% endif %}
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Batimento</p>
+  <h2>Divergências</h2>
+</div>
+
+{% if not divergencias and not divergencias_fora_da_lista %}
+<div class="vazio">
+  <p>Nenhuma divergência encontrada.</p>
+</div>
+{% endif %}
+
+{% if divergencias %}
+<div class="tabela-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>CPF</th>
+        <th>Nome</th>
+        <th>Tipo</th>
+        <th>Descrição</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for divergencia in divergencias %}
+      <tr>
+        <td data-rotulo="CPF" class="num">{{ divergencia.cpf }}</td>
+        <td data-rotulo="Nome">{{ divergencia.nome }}</td>
+        <td data-rotulo="Tipo">{{ divergencia.tipo }}</td>
+        <td data-rotulo="Descrição">{{ divergencia.mensagem }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+{% if divergencias_fora_da_lista %}
+<details>
+  <summary>CPFs fora da lista mestra ({{ divergencias_fora_da_lista | length }})</summary>
+  <div class="tabela-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>CPF</th>
+          <th>Nome</th>
+          <th>Marcar como conhecido</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for divergencia in divergencias_fora_da_lista %}
+        <tr>
+          <td data-rotulo="CPF" class="num">{{ divergencia.cpf }}</td>
+          <td data-rotulo="Nome">{{ divergencia.nome }}</td>
+          <td data-rotulo="Marcar como conhecido">
+            <form method="post" action="/contratos/{{ contrato.id }}/cpfs-conhecidos">
+              <input type="hidden" name="cpf" value="{{ divergencia.cpf }}">
+              <input type="hidden" name="nome" value="{{ divergencia.nome }}">
+              <input type="hidden" name="competencia_ano" value="{{ competencia.ano }}">
+              <input type="hidden" name="competencia_mes" value="{{ competencia.mes }}">
+              <input type="text" name="motivo" placeholder="Motivo">
+              <button type="submit" class="botao--discreto">Marcar como conhecido</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</details>
+{% endif %}
+{% endblock %}

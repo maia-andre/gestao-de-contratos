@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Recebimento provisório — Competência {{ "%02d" % competencia.mes }}/{{ competencia.ano }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}">&larr; Voltar à competência</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Competência {{ "%02d" % competencia.mes }}/{{ competencia.ano }}</p>
+  <h1>Recebimento provisório</h1>
+  {% if valores.get('decisao') %}
+  <p>Status atual: <strong>{{ decisoes.get(valores.get('decisao'), valores.get('decisao')) }}</strong></p>
+  {% endif %}
+</div>
+
+{% if erros %}
+<ul class="aviso">
+  {% for erro in erros %}
+  <li>{{ erro }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<form method="post" action="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}/recebimento-provisorio" class="form--larga">
+  <label>Data
+    <input type="date" name="data" value="{{ valores.get('data', '') }}">
+  </label>
+  <fieldset>
+    <legend>Decisão</legend>
+    {% for valor, rotulo in decisoes.items() %}
+    <label>
+      <input type="radio" name="decisao" value="{{ valor }}" {% if valores.get('decisao') == valor %}checked{% endif %}>
+      {{ rotulo }}
+    </label>
+    {% endfor %}
+  </fieldset>
+  <label>Observação
+    <textarea name="observacao">{{ valores.get('observacao', '') }}</textarea>
+  </label>
+  <button type="submit">Salvar</button>
+</form>
+{% endblock %}

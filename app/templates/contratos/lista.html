@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Contratos — Central de Apoio à Equipe de Fiscalização de Contratos{% endblock %}
+
+{% block content %}
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Registro</p>
+  <h1>Contratos cadastrados</h1>
+  <div class="acoes-pagina">
+    <a href="/contratos/novo">Cadastrar novo contrato</a>
+    <span class="separador">·</span>
+    <a href="/exportar">Exportar todos (.json)</a>
+    <span class="separador">·</span>
+    <a href="/importar">Importar (.json)</a>
+  </div>
+</div>
+
+{% if contratos %}
+<div class="tabela-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Número</th>
+        <th>Objeto</th>
+        <th>Contratada</th>
+        <th>CNPJ</th>
+        <th>Vigência</th>
+        <th>Mão de obra exclusiva</th>
+        <th>Valor global</th>
+        <th>Modalidade</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for contrato in contratos %}
+      <tr>
+        <td data-rotulo="Número"><a href="/contratos/{{ contrato.id }}">{{ contrato.numero }}</a></td>
+        <td data-rotulo="Objeto">{{ contrato.objeto }}</td>
+        <td data-rotulo="Contratada">{{ contrato.contratada_razao_social }}</td>
+        <td data-rotulo="CNPJ" class="num">{{ contrato.contratada_cnpj }}</td>
+        <td data-rotulo="Vigência" class="num">{{ contrato.vigencia_inicio }} a {{ contrato.vigencia_fim }}</td>
+        <td data-rotulo="Mão de obra exclusiva">{{ "Sim" if contrato.mao_de_obra_exclusiva else "Não" }}</td>
+        <td data-rotulo="Valor global" class="num">{{ contrato.valor_global }}</td>
+        <td data-rotulo="Modalidade">{{ contrato.modalidade }}</td>
+        <td data-rotulo="Ações"><a href="/contratos/{{ contrato.id }}/editar">Editar</a> · <a href="/contratos/{{ contrato.id }}/exportar">Exportar</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="vazio">
+  <p>Nenhum contrato cadastrado.</p>
+</div>
+{% endif %}
+{% endblock %}

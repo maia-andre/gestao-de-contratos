@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}{% if reuniao %}Editar reunião{% else %}Registrar reunião{% endif %} — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/reunioes">&larr; Voltar às reuniões</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Ciclo do contrato</p>
+  <h1>{% if reuniao %}Editar reunião{% else %}Registrar reunião{% endif %}</h1>
+</div>
+
+{% if erros %}
+<ul class="aviso">
+  {% for erro in erros %}
+  <li>{{ erro }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<form method="post" action="{% if reuniao %}/contratos/{{ contrato.id }}/reunioes/{{ reuniao.id }}/editar{% else %}/contratos/{{ contrato.id }}/reunioes{% endif %}" class="form--larga">
+  <label>Data
+    <input type="date" name="data" value="{{ valores.get('data', '') }}">
+  </label>
+  <label>Hora (opcional)
+    <input type="time" name="hora" value="{{ valores.get('hora', '') }}">
+  </label>
+  <label>Local (opcional)
+    <input type="text" name="local" value="{{ valores.get('local', '') }}">
+  </label>
+  <label>Participantes
+    <textarea name="participantes">{{ valores.get('participantes', '') }}</textarea>
+  </label>
+  <label>Resumo/pauta
+    <textarea name="resumo">{{ valores.get('resumo', '') }}</textarea>
+  </label>
+  <button type="submit">Salvar</button>
+</form>
+{% endblock %}

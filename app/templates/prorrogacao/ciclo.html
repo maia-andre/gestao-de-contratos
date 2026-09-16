@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+
+{% block title %}Prorrogação — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}">&larr; Voltar ao contrato</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Ciclo de prorrogação</p>
+  <h1>Prorrogação — Contrato {{ contrato.numero }}</h1>
+  <div class="acoes-pagina">
+    <a href="/contratos/{{ contrato.id }}/notificacao-prorrogacao">Gerar notificação</a>
+    <span class="separador">·</span>
+    <a href="/contratos/{{ contrato.id }}/configuracoes-prazos">Configurações de prazos</a>
+  </div>
+</div>
+
+{% if erros %}
+<ul class="aviso">
+  {% for erro in erros %}
+  <li>{{ erro }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% if avisos %}
+<ul class="aviso">
+  {% for aviso in avisos %}
+  <li>{{ aviso }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<dl class="ficha">
+  <div>
+    <dt>Estado do ciclo</dt>
+    <dd>{{ ciclo.rotulo_estado }}</dd>
+  </div>
+  <div>
+    <dt>Fim da vigência</dt>
+    <dd class="num">{{ contrato.vigencia_fim }}</dd>
+  </div>
+  <div>
+    <dt>Duração acumulada</dt>
+    <dd>{{ duracao }}</dd>
+  </div>
+  <div>
+    <dt>Antecedência da notificação</dt>
+    <dd class="num">{{ configuracao.antecedencia_notificacao_dias }} dias</dd>
+  </div>
+  <div>
+    <dt>Prazo de resposta da contratada</dt>
+    <dd class="num">{{ configuracao.prazo_resposta_dias_uteis }} dias úteis</dd>
+  </div>
+  {% if ciclo.data_envio_notificacao %}
+  <div>
+    <dt>Notificação enviada em</dt>
+    <dd class="num">{{ ciclo.data_envio_notificacao.strftime("%d/%m/%Y") }}</dd>
+  </div>
+  <div>
+    <dt>Data-limite da resposta</dt>
+    <dd class="num">{{ data_limite_resposta.strftime("%d/%m/%Y") }}</dd>
+  </div>
+  {% endif %}
+  {% if ciclo.data_resposta %}
+  <div>
+    <dt>Resposta da contratada</dt>
+    <dd>{{ "Com interesse" if ciclo.teor_resposta == "com_interesse" else "Sem interesse" }},
+      em <span class="num">{{ ciclo.data_resposta.strftime("%d/%m/%Y") }}</span></dd>
+  </div>
+  {% endif %}
+  {% if ciclo.data_encerramento %}
+  <div>
+    <dt>Ciclo encerrado em</dt>
+    <dd class="num">{{ ciclo.data_encerramento.strftime("%d/%m/%Y") }}</dd>
+  </div>
+  {% if ciclo.observacao_encerramento %}
+  <div>
+    <dt>Observação do encerramento</dt>
+    <dd>{{ ciclo.observacao_encerramento }}</dd>
+  </div>
+  {% endif %}
+  {% endif %}
+  {% if ciclo.data_area_acionada %}
+  <div>
+    <dt>Área demandante acionada em</dt>
+    <dd class="num">{{ ciclo.data_area_acionada.strftime("%d/%m/%Y") }}</dd>
+  </div>
+  {% if ciclo.observacao_area %}
+  <div>
+    <dt>Observação do acionamento</dt>
+    <dd>{{ ciclo.observacao_area }}</dd>
+  </div>
+  {% endif %}
+  {% endif %}
+</dl>
+
+{% if ciclo.estado == "aguardando_notificacao" %}
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Registro</p>
+  <h2>Registrar envio da notificação</h2>
+</div>
+<form method="post" action="/contratos/{{ contrato.id }}/prorrogacao/envio" class="form--larga">
+  <label>Data do envio
+    <input type="date" name="data_envio">
+  </label>
+  <button type="submit">Registrar envio</button>
+</form>
+{% elif ciclo.estado == "notificacao_enviada" %}
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Registro</p>
+  <h2>Registrar resposta da contratada</h2>
+</div>
+<form method="post" action="/contratos/{{ contrato.id }}/prorrogacao/resposta" class="form--larga">
+  <label>Data da resposta
+    <input type="date" name="data_resposta">
+  </label>
+  <label>Teor
+    <select name="teor">
+      <option value="com_interesse">Com interesse na prorrogação</option>
+      <option value="sem_interesse">Sem interesse na prorrogação</option>
+    </select>
+  </label>
+  <button type="submit">Registrar resposta</button>
+</form>
+{% elif ciclo.estado == "resposta_com_interesse" %}
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Registro</p>
+  <h2>Registrar aditivo de prorrogação assinado</h2>
+</div>
+<form method="post" action="/contratos/{{ contrato.id }}/prorrogacao/aditivo" class="form--larga">
+  <label>Nova data de fim de vigência
+    <input type="date" name="nova_vigencia_fim">
+  </label>
+  <button type="submit">Registrar aditivo</button>
+</form>
+{% elif ciclo.estado == "resposta_sem_interesse" %}
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Registro</p>
+  <h2>Registrar acionamento da área demandante</h2>
+</div>
+<form method="post" action="/contratos/{{ contrato.id }}/prorrogacao/area-demandante" class="form--larga">
+  <label>Data do acionamento
+    <input type="date" name="data_acionamento">
+  </label>
+  <label>Observação (opcional)
+    <input type="text" name="observacao">
+  </label>
+  <button type="submit">Registrar acionamento</button>
+</form>
+{% endif %}
+
+{% if ciclo_encerravel %}
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Encerramento</p>
+  <h2>Encerrar ciclo — não haverá prorrogação (decisão da administração)</h2>
+</div>
+<form method="post" action="/contratos/{{ contrato.id }}/prorrogacao/encerrar" class="form--larga">
+  <label>Observação (opcional)
+    <input type="text" name="observacao">
+  </label>
+  <button type="submit" class="botao--discreto">Encerrar ciclo</button>
+</form>
+{% endif %}
+
+{% if historico %}
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Prorrogações</p>
+  <h2>Histórico de prorrogações</h2>
+</div>
+<div class="tabela-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Registrado em</th>
+        <th>Vigência anterior</th>
+        <th>Nova vigência</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for aditivo in historico %}
+      <tr>
+        <td data-rotulo="Registrado em" class="num">{{ aditivo.data_registro_aditivo.strftime("%d/%m/%Y") }}</td>
+        <td data-rotulo="Vigência anterior" class="num">{{ aditivo.vigencia_fim_anterior.strftime("%d/%m/%Y") }}</td>
+        <td data-rotulo="Nova vigência" class="num">{{ aditivo.nova_vigencia_fim.strftime("%d/%m/%Y") }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+{% endblock %}

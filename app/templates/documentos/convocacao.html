@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Convocação de reunião — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/reunioes">&larr; Voltar às reuniões</a>
+
+<div class="acoes-pagina acoes-impressao-ocultar">
+  <a href="/contratos/{{ contrato.id }}/reunioes/{{ reuniao.id }}/convocacao">Trocar emissor</a>
+</div>
+
+<article class="documento">
+  <header class="documento__cabecalho">
+    <p>{{ orgao }}</p>
+    <p>Fiscalização de Contratos — Decreto Municipal 19.721/2024</p>
+  </header>
+
+  <h1>Convocação de Reunião</h1>
+
+  <section class="documento__identificacao">
+    <p><strong>Contrato:</strong> {{ contrato.numero }}</p>
+    <p><strong>Objeto:</strong> {{ contrato.objeto }}</p>
+    <p><strong>Contratada:</strong> {{ contrato.contratada_razao_social }} — CNPJ {{ contrato.contratada_cnpj }}</p>
+  </section>
+
+  <p class="documento__texto">
+    Fica a contratada convocada para reunião referente ao contrato acima identificado, a
+    realizar-se em <strong>{{ reuniao.data.strftime("%d/%m/%Y") }}</strong>, às
+    <strong>{{ reuniao.hora }}</strong>, no seguinte local:
+    <strong>{{ reuniao.local }}</strong>.
+  </p>
+
+  <section class="documento__secao">
+    <h2>Pauta</h2>
+    <p class="preservar-quebras">{{ reuniao.resumo }}</p>
+  </section>
+
+  <p class="documento__data">{{ municipio }}, {{ hoje.strftime("%d/%m/%Y") }}.</p>
+
+  <div class="documento__assinatura">
+    <p class="linha-assinatura"></p>
+    <p><strong>{{ emissor.nome }}</strong></p>
+    <p>{{ emissor.matricula_cargo }}</p>
+  </div>
+</article>
+{% endblock %}

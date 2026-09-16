@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Convocação de reunião — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/reunioes">&larr; Voltar às reuniões</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Reunião de {{ reuniao.data.strftime("%d/%m/%Y") }}</p>
+  <h1>Convocação de reunião</h1>
+</div>
+
+<ul class="aviso">
+  <li>
+    Não é possível gerar a convocação: a reunião está sem
+    {{ " e sem ".join(faltantes) }} preenchido{{ "s" if faltantes|length > 1 else "" }}.
+    Edite a reunião e informe {{ "esses campos" if faltantes|length > 1 else "esse campo" }}.
+  </li>
+</ul>
+
+<a href="/contratos/{{ contrato.id }}/reunioes/{{ reuniao.id }}/editar">Editar reunião</a>
+{% endblock %}

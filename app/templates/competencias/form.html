@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Nova competência — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/competencias">&larr; Voltar às competências</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Ciclo mensal</p>
+  <h1>Nova competência</h1>
+</div>
+
+{% if erro %}
+<ul class="aviso">
+  <li>{{ erro }}</li>
+</ul>
+{% endif %}
+
+<form method="post" action="/contratos/{{ contrato.id }}/competencias">
+  <label>Mês/ano
+    <input type="month" name="mes_ano">
+  </label>
+  <button type="submit">Salvar</button>
+</form>
+{% endblock %}

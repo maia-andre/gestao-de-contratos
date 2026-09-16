@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Notificação de Prorrogação — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/prorrogacao">&larr; Voltar à prorrogação</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Ciclo de prorrogação</p>
+  <h1>Notificação de Prorrogação</h1>
+</div>
+
+<form method="get" action="/contratos/{{ contrato.id }}/notificacao-prorrogacao" class="form--larga">
+  <label>Emissor da notificação
+    <select name="emissor_id">
+      {% for membro in membros %}
+      <option value="{{ membro.id }}"{% if preselecionado and membro.id == preselecionado.id %} selected{% endif %}>{{ membro.nome }} — {{ membro.matricula_cargo }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <button type="submit">Gerar notificação</button>
+</form>
+{% endblock %}

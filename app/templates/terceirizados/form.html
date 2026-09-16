@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}{{ titulo | default("Cadastrar terceirizado") }} — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/terceirizados">&larr; Voltar à lista mestra</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Lista mestra de terceirizados</p>
+  <h1>{{ titulo | default("Cadastrar terceirizado") }}</h1>
+</div>
+
+{% if erros %}
+<ul class="aviso">
+  {% for erro in erros %}
+  <li>{{ erro }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<form method="post" action="{{ action | default('/contratos/' ~ contrato.id ~ '/terceirizados') }}">
+  <label>CPF
+    <input type="text" name="cpf" value="{{ valores.get('cpf', '') }}">
+  </label>
+  <label>Nome
+    <input type="text" name="nome" value="{{ valores.get('nome', '') }}">
+  </label>
+  <label>Cargo
+    <input type="text" name="cargo" value="{{ valores.get('cargo', '') }}">
+  </label>
+  <label>Salário base
+    <input type="text" name="salario_base" value="{{ valores.get('salario_base', '') }}">
+  </label>
+  <label>Data de admissão
+    <input type="date" name="data_admissao" value="{{ valores.get('data_admissao', '') }}">
+  </label>
+  <label>Data de desligamento
+    <input type="date" name="data_desligamento" value="{{ valores.get('data_desligamento', '') }}">
+  </label>
+  <button type="submit">Salvar</button>
+</form>
+{% endblock %}

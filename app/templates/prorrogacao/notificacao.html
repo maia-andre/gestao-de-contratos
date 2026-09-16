@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Notificação de Prorrogação — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/prorrogacao">&larr; Voltar à prorrogação</a>
+
+<div class="acoes-pagina acoes-impressao-ocultar">
+  <a href="/contratos/{{ contrato.id }}/notificacao-prorrogacao">Trocar emissor</a>
+</div>
+
+<article class="documento">
+  <header class="documento__cabecalho">
+    <p>{{ orgao }}</p>
+    <p>Fiscalização de Contratos — Decreto Municipal 19.721/2024</p>
+  </header>
+
+  <h1>Notificação de Prorrogação</h1>
+
+  <section class="documento__identificacao">
+    <p><strong>Contrato:</strong> {{ contrato.numero }}</p>
+    <p><strong>Objeto:</strong> {{ contrato.objeto }}</p>
+    <p><strong>Contratada:</strong> {{ contrato.contratada_razao_social }} — CNPJ {{ contrato.contratada_cnpj }}</p>
+    <p><strong>Fim da vigência:</strong> {{ contrato.vigencia_fim.strftime("%d/%m/%Y") }}</p>
+  </section>
+
+  <p class="documento__texto">
+    Considerando a proximidade do término da vigência do contrato acima identificado, previsto
+    para <strong>{{ contrato.vigencia_fim.strftime("%d/%m/%Y") }}</strong>, fica a contratada
+    notificada a manifestar, por escrito, seu interesse na prorrogação contratual, no prazo de
+    <strong>{{ prazo_resposta }} {% if prazo_resposta == 1 %}dia útil{% else %}dias úteis{% endif %}</strong>
+    contado do recebimento desta notificação.
+  </p>
+
+  <p class="documento__texto">
+    A ausência de manifestação no prazo indicado será interpretada como desinteresse na
+    prorrogação, seguindo-se as providências administrativas cabíveis.
+  </p>
+
+  <p class="documento__data">{{ municipio }}, {{ hoje.strftime("%d/%m/%Y") }}.</p>
+
+  <div class="documento__assinatura">
+    <p class="linha-assinatura"></p>
+    <p><strong>{{ emissor.nome }}</strong></p>
+    <p>{{ emissor.matricula_cargo }}</p>
+  </div>
+</article>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Relatório Final — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}">&larr; Voltar ao contrato</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Relatório Final de Consecução de Objetivos</p>
+  <h1>Parecer do Gestor — Contrato {{ contrato.numero }}</h1>
+  <div class="acoes-pagina">
+    <a href="/contratos/{{ contrato.id }}/relatorio-final/documento">Gerar documento</a>
+  </div>
+</div>
+
+{% if erros %}
+<ul class="aviso">
+  {% for erro in erros %}
+  <li>{{ erro }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<form method="post" action="/contratos/{{ contrato.id }}/relatorio-final" class="form--larga">
+  <label>Consecução dos objetivos da contratação
+    <select name="conceito">
+      <option value="">Selecione…</option>
+      {% for chave, rotulo in conceitos.items() %}
+      <option value="{{ chave }}"{% if valores.conceito == chave %} selected{% endif %}>{{ rotulo }}</option>
+      {% endfor %}
+    </select>
+  </label>
+  <label>Justificativa
+    <textarea name="justificativa">{{ valores.justificativa }}</textarea>
+  </label>
+  <label>Condutas para aprimoramento / lições aprendidas (opcional)
+    <textarea name="licoes">{{ valores.licoes }}</textarea>
+  </label>
+  <button type="submit">Salvar parecer</button>
+</form>
+{% endblock %}

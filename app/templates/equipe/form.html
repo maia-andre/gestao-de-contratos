@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}{{ titulo | default("Adicionar membro de equipe") }} — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}">&larr; Voltar ao contrato {{ contrato.numero }}</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Equipe de fiscalização</p>
+  <h1>{{ titulo | default("Adicionar membro de equipe") }}</h1>
+</div>
+
+{% if erros %}
+<ul class="aviso">
+  {% for erro in erros %}
+  <li>{{ erro }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+<form method="post" action="{{ action | default('/contratos/' ~ contrato.id ~ '/equipe') }}">
+  <label>Nome
+    <input type="text" name="nome" value="{{ valores.get('nome', '') }}">
+  </label>
+  <label>Matrícula/cargo
+    <input type="text" name="matricula_cargo" value="{{ valores.get('matricula_cargo', '') }}">
+  </label>
+  <label>Lotação
+    <input type="text" name="lotacao" value="{{ valores.get('lotacao', '') }}">
+  </label>
+  <fieldset>
+    <legend>Papéis</legend>
+    {% set papeis_selecionados = valores.get('papeis', []) %}
+    {% for papel in papeis_validos %}
+    <label>
+      <input type="checkbox" name="papeis" value="{{ papel }}" {% if papel in papeis_selecionados %}checked{% endif %}>
+      {{ papel }}
+    </label>
+    {% endfor %}
+  </fieldset>
+  <label>Data de designação
+    <input type="date" name="data_designacao" value="{{ valores.get('data_designacao', '') }}">
+  </label>
+  <label>Substituto eventual
+    <input type="text" name="substituto" value="{{ valores.get('substituto', '') }}">
+  </label>
+  <button type="submit">Salvar</button>
+</form>
+{% endblock %}

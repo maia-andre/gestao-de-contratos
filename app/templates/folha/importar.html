@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Importar folha — Competência {{ "%02d" % competencia.mes }}/{{ competencia.ano }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}/folha">&larr; Voltar à folha</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Competência {{ "%02d" % competencia.mes }}/{{ competencia.ano }}</p>
+  <h1>Importar folha mensal</h1>
+  <p>Colunas esperadas: <code>cpf;nome;cargo;salario_base;total_vencimentos;base_inss;base_fgts;inss_descontado;fgts_depositado;liquido</code> (delimitador <code>;</code>).</p>
+</div>
+
+{% if erros %}
+<ul class="aviso">
+  {% if importados %}
+  <li>{{ importados }} linha(s) importada(s) com sucesso. As linhas abaixo tiveram erro e não foram importadas:</li>
+  {% endif %}
+  {% for erro in erros %}
+  <li>{{ erro }}</li>
+  {% endfor %}
+</ul>
+{% endif %}
+
+{% if ja_existe %}
+<p>Esta competência já tem uma folha importada. Marque a confirmação abaixo para substituí-la.</p>
+{% endif %}
+
+<form method="post" action="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}/folha/importar" enctype="multipart/form-data">
+  <label>Arquivo .csv
+    <input type="file" name="arquivo" accept=".csv,text/csv">
+  </label>
+  {% if ja_existe %}
+  <label>
+    <input type="checkbox" name="confirmar_substituicao" value="sim">
+    Confirmo que quero substituir a folha já importada desta competência
+  </label>
+  {% endif %}
+  <button type="submit">Importar</button>
+</form>
+{% endblock %}

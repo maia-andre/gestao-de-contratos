@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Competências — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}">&larr; Voltar ao contrato {{ contrato.numero }}</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Ciclo mensal</p>
+  <h1>Competências — Contrato {{ contrato.numero }}</h1>
+  <div class="acoes-pagina">
+    <a href="/contratos/{{ contrato.id }}/competencias/nova">Nova competência</a>
+  </div>
+</div>
+
+{% if competencias %}
+<div class="tabela-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Competência</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for competencia in competencias %}
+      <tr>
+        <td data-rotulo="Competência">{{ "%02d" % competencia.mes }}/{{ competencia.ano }}</td>
+        <td data-rotulo="Ações"><a href="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}">Abrir</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="vazio">
+  <p>Nenhuma competência cadastrada.</p>
+</div>
+{% endif %}
+{% endblock %}

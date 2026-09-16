@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block title %}Relatório administrativo — Competência {{ "%02d" % competencia.mes }}/{{ competencia.ano }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}">&larr; Voltar à competência</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Relatório Mensal de Fiscalização Administrativa</p>
+  <h1>Contrato {{ contrato.numero }} — Competência {{ "%02d" % competencia.mes }}/{{ competencia.ano }}</h1>
+  <p>{{ contrato.contratada_razao_social }} ({{ contrato.contratada_cnpj }})</p>
+</div>
+
+{% if erro %}
+<ul class="aviso">
+  <li>{{ erro }}</li>
+</ul>
+{% endif %}
+
+<h2>Divergências do batimento</h2>
+{% if divergencias %}
+<div class="tabela-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>CPF</th>
+        <th>Nome</th>
+        <th>Tipo</th>
+        <th>Descrição</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for divergencia in divergencias %}
+      <tr>
+        <td data-rotulo="CPF" class="num">{{ divergencia.cpf }}</td>
+        <td data-rotulo="Nome">{{ divergencia.nome }}</td>
+        <td data-rotulo="Tipo">{{ divergencia.tipo }}</td>
+        <td data-rotulo="Descrição">{{ divergencia.mensagem }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="vazio">
+  <p>Nenhuma divergência encontrada.</p>
+</div>
+{% endif %}
+
+<h2>Checklist documental</h2>
+<div class="tabela-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Item</th>
+        <th>Status</th>
+        <th>Validade</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for linha in linhas_checklist %}
+      <tr>
+        <td data-rotulo="Item">{{ linha.item.rotulo }}</td>
+        <td data-rotulo="Status">{{ linha.item.status }}</td>
+        <td data-rotulo="Validade">{{ linha.validade or "—" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<h2>Conclusão</h2>
+<p>Conclusão sugerida automaticamente: <strong>{{ conclusoes[sugestao] }}</strong></p>
+<form method="post" action="/contratos/{{ contrato.id }}/competencias/{{ competencia.id }}/relatorio-administrativo/conclusao" class="acoes-impressao-ocultar">
+  <select name="conclusao">
+    {% for chave, rotulo in conclusoes.items() %}
+    <option value="{{ chave }}" {{ "selected" if chave == conclusao_atual else "" }}>{{ rotulo }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit" class="botao">Salvar conclusão</button>
+</form>
+<p class="conclusao-impressao">Conclusão: <strong>{{ conclusoes[conclusao_atual] }}</strong></p>
+{% endblock %}

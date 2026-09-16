@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Reuniões — Contrato {{ contrato.numero }}{% endblock %}
+
+{% block content %}
+<a class="voltar" href="/contratos/{{ contrato.id }}">&larr; Voltar ao contrato {{ contrato.numero }}</a>
+
+<div class="cabecalho-pagina">
+  <p class="eyebrow">Ciclo do contrato</p>
+  <h1>Reuniões — Contrato {{ contrato.numero }}</h1>
+  <div class="acoes-pagina">
+    <a href="/contratos/{{ contrato.id }}/reunioes/nova">Registrar reunião</a>
+  </div>
+</div>
+
+{% if reunioes %}
+<div class="tabela-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Data</th>
+        <th>Hora</th>
+        <th>Local</th>
+        <th>Participantes</th>
+        <th>Resumo</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for reuniao in reunioes %}
+      <tr>
+        <td data-rotulo="Data" class="num">{{ reuniao.data }}</td>
+        <td data-rotulo="Hora" class="num">{{ reuniao.hora or "—" }}</td>
+        <td data-rotulo="Local">{{ reuniao.local or "—" }}</td>
+        <td data-rotulo="Participantes">{{ reuniao.participantes }}</td>
+        <td data-rotulo="Resumo">{{ reuniao.resumo }}</td>
+        <td data-rotulo="Ações">
+          <a href="/contratos/{{ contrato.id }}/reunioes/{{ reuniao.id }}/editar">Editar</a>
+          <a href="/contratos/{{ contrato.id }}/reunioes/{{ reuniao.id }}/convocacao">Convocação</a>
+          <a href="/contratos/{{ contrato.id }}/reunioes/{{ reuniao.id }}/ata">Ata</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="vazio">
+  <p>Nenhuma reunião registrada.</p>
+</div>
+{% endif %}
+{% endblock %}
