@@ -45,6 +45,22 @@ Veja o [roadmap no README](README.md). Está livre agora: adaptadores de importa
 - Python 3.13, FastAPI, Jinja2 server-side, SQLite. Sem JavaScript de framework, sem bundler, sem chamada de rede externa (há um teste que garante isso).
 - Toda regra de negócio nasce com teste em `tests/`. Rode `pytest -q` antes do PR.
 
+### Mudanças no banco (Alembic)
+
+Cada instância tem o próprio banco SQLite, e a aplicação aplica as migrações sozinha ao subir (`app/database.py:init_db`). Por isso, **toda mudança em `app/models*.py` precisa vir com uma migração** em `app/migrations/versions/`. Há um teste que falha se models e migrações divergirem.
+
+```bash
+# depois de alterar os models:
+.venv/bin/alembic revision --autogenerate -m "descreve a mudança"
+# revise o arquivo gerado: o autogenerate não detecta renomeação (vira apagar + criar,
+# perdendo os dados) e não preenche dados em coluna nova NOT NULL
+.venv/bin/python -m pytest -q
+```
+
+- Use um banco descartável ao gerar: `GESTORDECONTRATO_DB_PATH=/caminho/descartavel.db` (o `alembic.ini` usa o mesmo banco da aplicação).
+- Nunca edite uma migração que já foi publicada. Se precisar corrigir, crie uma nova.
+- Se dois PRs criarem migração a partir da mesma revisão, haverá duas "heads" e um teste falha. Rebaseie e ajuste o `down_revision` da sua.
+
 ---
 
 ## ⚠️ Nunca inclua dados reais
